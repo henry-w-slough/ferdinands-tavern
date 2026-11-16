@@ -2,7 +2,8 @@ extends CharacterBody2D
 
 enum State {
 	ENTERING,
-	EXITING
+	ORDERING,
+	EXITING,
 }
 
 enum WalkAnimation {
@@ -34,11 +35,16 @@ const FRAME_SIZE = Vector2(16, 20)
 
 var state: State = State.ENTERING
 
+var game: Node = null
+
 var order_point: Node2D
 var spawn_point: Node2D
+
 var _navigation_ready: bool = false
 
 const move_speed: float = 50.0
+
+var order_wait_time = 60
 
 
 func _ready() -> void:
@@ -54,17 +60,26 @@ func _ready() -> void:
 
 
 func _physics_process(_delta: float) -> void:
-	if not _navigation_ready:
-		velocity = Vector2.ZERO
-		move_and_slide()
-		return
 
+	if state == State.ORDERING:
+		order_wait_time -= 1
+		if order_wait_time > 0:
+			return
+		_add_order()
+		state = State.EXITING
+		
 	_navigate()
 	move_and_slide()
 
 
 func _process(_delta: float) -> void:
 	_animate()
+
+
+func _add_order() -> void:
+	var new_order = Order.new()
+	game.current_orders.append(new_order)
+
 
 
 func _animate() -> void:
@@ -91,6 +106,11 @@ func _navigate() -> void:
 		State.EXITING:
 			_set_target_position(spawn_point.global_position)
 
+	if not _navigation_ready:
+		velocity = Vector2.ZERO
+		move_and_slide()
+		return
+
 	var next_pos := nav_agent.get_next_path_position()
 	
 	if nav_agent.is_navigation_finished():
@@ -100,7 +120,7 @@ func _navigate() -> void:
 			self.queue_free()
 
 		if state == State.ENTERING:
-			state = State.EXITING
+			state = State.ORDERING
 
 		return
 

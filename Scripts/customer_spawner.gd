@@ -18,6 +18,10 @@ func _process(_delta: float) -> void:
 	if game.should_spawn_customer:
 		_spawn_customer()
 
+	#setting the total customers to the
+	#child-ed Customer types
+	game.total_customers = len(get_children())
+
 
 
 func _spawn_customer() -> void:
@@ -28,5 +32,7 @@ func _spawn_customer() -> void:
 
 	new_customer.order_point = customer_order_point
 	new_customer.spawn_point = customer_spawn_point
+
+	new_customer.game = game
 
 	add_child(new_customer)
