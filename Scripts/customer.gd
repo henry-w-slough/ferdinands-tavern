@@ -1,5 +1,16 @@
 extends CharacterBody2D
 
+enum State {
+	ENTERING,
+	EXITING
+}
+
+enum WalkAnimation {
+	DOWN = 0,
+	LEFT = 1,
+	RIGHT = 2,
+	UP = 3
+}
 
 const CUSTOMER_SPRITE_SHEETS = [
 	preload("res://Assets/character1.png"),
@@ -8,48 +19,110 @@ const CUSTOMER_SPRITE_SHEETS = [
 	preload("res://Assets/character4.png"),
 	preload("res://Assets/character5.png")
 ]
-const WALK_ANIMATION_ROWS = {
-	&"walk_down": 0,
-	&"walk_left": 1,
-	&"walk_right": 2,
-	&"walk_up": 3
+
+const WALK_ANIMATIONS = {
+	WalkAnimation.DOWN: &"walk_down",
+	WalkAnimation.LEFT: &"walk_left",
+	WalkAnimation.RIGHT: &"walk_right",
+	WalkAnimation.UP: &"walk_up"
 }
+
 const FRAME_SIZE = Vector2(16, 20)
 
+@onready var sprite: AnimatedSprite2D = $AnimatedSprite2D
+@onready var nav_agent: NavigationAgent2D = $NavigationAgent2D
 
-enum State {
-	ENTERING,
-	ORDERING,
-	EXITING
-}
-
+var state: State = State.ENTERING
 
 var order_point: Node2D
+var spawn_point: Node2D
+var _navigation_ready: bool = false
 
-@onready var sprite: AnimatedSprite2D = $AnimatedSprite2D
+const move_speed: float = 50.0
 
 
 func _ready() -> void:
+
 	var sprite_sheet: Texture2D = CUSTOMER_SPRITE_SHEETS[randi_range(0, CUSTOMER_SPRITE_SHEETS.size() - 1)]
 	sprite.sprite_frames = _create_sprite_frames(sprite_sheet)
-	sprite.play(&"walk_left")
+
+	sprite.play(WALK_ANIMATIONS[WalkAnimation.LEFT])
+
+	await get_tree().physics_frame
+	_navigation_ready = true
+	_set_target_position(order_point.global_position)
+
+
+func _physics_process(_delta: float) -> void:
+	if not _navigation_ready:
+		velocity = Vector2.ZERO
+		move_and_slide()
+		return
+
+	_navigate()
+	move_and_slide()
 
 
 func _process(_delta: float) -> void:
+	_animate()
 
-	pass
+
+func _animate() -> void:
+
+	var real_velocity = get_real_velocity()
+
+	if abs(real_velocity.x) > abs(real_velocity.y):
+		if real_velocity.x > 0:
+			sprite.play(WALK_ANIMATIONS[WalkAnimation.RIGHT])
+		if real_velocity.x < 0:
+			sprite.play(WALK_ANIMATIONS[WalkAnimation.LEFT])
+	else:
+		if real_velocity.y > 0:
+			sprite.play(WALK_ANIMATIONS[WalkAnimation.DOWN])
+		if real_velocity.y < 0:
+			sprite.play(WALK_ANIMATIONS[WalkAnimation.UP])
+
+
+func _navigate() -> void:
+
+	match state:
+		State.ENTERING:
+			_set_target_position(order_point.global_position)
+		State.EXITING:
+			_set_target_position(spawn_point.global_position)
+
+	var next_pos := nav_agent.get_next_path_position()
+	
+	if nav_agent.is_navigation_finished():
+		velocity = Vector2.ZERO
+
+		if state == State.EXITING:
+			self.queue_free()
+
+		if state == State.ENTERING:
+			state = State.EXITING
+
+		return
+
+	velocity = global_position.direction_to(next_pos) * move_speed
+
+
+func _set_target_position(target: Vector2) -> void:
+	if not nav_agent.target_position.is_equal_approx(target):
+		nav_agent.target_position = target
 
 
 func _create_sprite_frames(sprite_sheet: Texture2D) -> SpriteFrames:
 
 	var sprite_frames := SpriteFrames.new()
 
-	for animation_name in WALK_ANIMATION_ROWS:
+	for animation in WALK_ANIMATIONS:
+		var animation_name: StringName = WALK_ANIMATIONS[animation]
 		sprite_frames.add_animation(animation_name)
 		sprite_frames.set_animation_speed(animation_name, 5.0)
 		sprite_frames.set_animation_loop(animation_name, true)
 
-		var row: int = WALK_ANIMATION_ROWS[animation_name]
+		var row: int = animation
 		for column in range(3):
 			var frame := AtlasTexture.new()
 			frame.atlas = sprite_sheet

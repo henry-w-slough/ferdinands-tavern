@@ -1,14 +1,14 @@
-[gd_scene format=3]
+[gd_scene format=3 uid="uid://bij4ilt3tkapm"]
 
-[ext_resource type="Script" path="res://Scripts/customer.gd" id="1_customer"]
+[ext_resource type="Script" uid="uid://6smt3mouhnwi" path="res://Scripts/customer.gd" id="1_customer"]
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_customer"]
-
-[node name="Customer" type="CharacterBody2D"]
+[node name="Customer" type="CharacterBody2D" unique_id=884264352]
+collision_layer = 2
+collision_mask = 3
 script = ExtResource("1_customer")
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-position = Vector2(0, 1)
-shape = SubResource("RectangleShape2D_customer")
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=576402883]
+y_sort_enabled = true
 
-[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+[node name="NavigationAgent2D" type="NavigationAgent2D" parent="." unique_id=1311351829]
+radius = 4.0
