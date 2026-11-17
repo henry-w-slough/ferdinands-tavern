@@ -1,10 +1,5 @@
 extends CharacterBody2D
 
-enum State {
-	ENTERING,
-	ORDERING,
-	EXITING,
-}
 
 enum WalkAnimation {
 	DOWN = 0,
@@ -13,13 +8,6 @@ enum WalkAnimation {
 	UP = 3
 }
 
-const CUSTOMER_SPRITE_SHEETS = [
-	preload("res://Assets/character1.png"),
-	preload("res://Assets/character2.png"),
-	preload("res://Assets/character3.png"),
-	preload("res://Assets/character4.png"),
-	preload("res://Assets/character5.png")
-]
 
 const WALK_ANIMATIONS = {
 	WalkAnimation.DOWN: &"walk_down",
@@ -28,126 +16,52 @@ const WALK_ANIMATIONS = {
 	WalkAnimation.UP: &"walk_up"
 }
 
+
+const SPRITESHEETS = [
+	preload("res://Assets/Customers/Customer1.png"),
+	preload("res://Assets/Customers/Customer2.png"),
+	preload("res://Assets/Customers/Customer3.png"),
+	preload("res://Assets/Customers/Customer4.png"),
+	preload("res://Assets/Customers/Customer5.png")
+]
+
+
 const FRAME_SIZE = Vector2(16, 20)
 
 @onready var sprite: AnimatedSprite2D = $AnimatedSprite2D
-@onready var nav_agent: NavigationAgent2D = $NavigationAgent2D
-
-var state: State = State.ENTERING
-
-var game: Node = null
-
-var order_point: Node2D
-var spawn_point: Node2D
-
-var _navigation_ready: bool = false
-
-const move_speed: float = 50.0
-
-var order_wait_time = 60
 
 
 func _ready() -> void:
 
-	var sprite_sheet: Texture2D = CUSTOMER_SPRITE_SHEETS[randi_range(0, CUSTOMER_SPRITE_SHEETS.size() - 1)]
-	sprite.sprite_frames = _create_sprite_frames(sprite_sheet)
+    #making spritesheet based on random int
+	var sprite_sheet: Texture2D = SPRITESHEETS.pick_random()
+	sprite.sprite_frames = _create_sprites(sprite_sheet)
 
 	sprite.play(WALK_ANIMATIONS[WalkAnimation.LEFT])
-
-	await get_tree().physics_frame
-	_navigation_ready = true
-	_set_target_position(order_point.global_position)
-
-	mouse_entered.connect(_on_mouse_entered)
-	mouse_exited.connect(_on_mouse_exited)
-
-
-func _physics_process(_delta: float) -> void:
-
-	if state == State.ORDERING:
-		order_wait_time -= 1
-		if order_wait_time > 0:
-			return
-		_add_order()
-		state = State.EXITING
-		
-	_navigate()
-	move_and_slide()
 
 
 func _process(_delta: float) -> void:
 	_animate()
 
 
-func _on_mouse_entered() -> void:
-	if sprite.material:
-		# Set outline thickness to 1 pixel (or 2.0 for a thicker pixel border)
-		sprite.material.set_shader_parameter("outline_width", 1.0)
-
-
-func _on_mouse_exited() -> void:
-	if sprite.material:
-		# Hide the outline completely
-		sprite.material.set_shader_parameter("outline_width", 0.0)
-
-
-func _add_order() -> void:
-	var new_order = Order.new()
-	game.current_orders.append(new_order)
-
-
-
 func _animate() -> void:
+    
+	var real_velocity := get_real_velocity()
 
-	var real_velocity = get_real_velocity()
+	if real_velocity.is_zero_approx():
+		return
 
+	var animation_name: StringName
 	if abs(real_velocity.x) > abs(real_velocity.y):
-		if real_velocity.x > 0:
-			sprite.play(WALK_ANIMATIONS[WalkAnimation.RIGHT])
-		if real_velocity.x < 0:
-			sprite.play(WALK_ANIMATIONS[WalkAnimation.LEFT])
+		animation_name = WALK_ANIMATIONS[WalkAnimation.RIGHT if real_velocity.x > 0 else WalkAnimation.LEFT]
 	else:
-		if real_velocity.y > 0:
-			sprite.play(WALK_ANIMATIONS[WalkAnimation.DOWN])
-		if real_velocity.y < 0:
-			sprite.play(WALK_ANIMATIONS[WalkAnimation.UP])
+		animation_name = WALK_ANIMATIONS[WalkAnimation.DOWN if real_velocity.y > 0 else WalkAnimation.UP]
+
+	if sprite.animation != animation_name:
+		sprite.play(animation_name)
 
 
-func _navigate() -> void:
-
-	match state:
-		State.ENTERING:
-			_set_target_position(order_point.global_position)
-		State.EXITING:
-			_set_target_position(spawn_point.global_position)
-
-	if not _navigation_ready:
-		velocity = Vector2.ZERO
-		move_and_slide()
-		return
-
-	var next_pos := nav_agent.get_next_path_position()
-	
-	if nav_agent.is_navigation_finished():
-		velocity = Vector2.ZERO
-
-		if state == State.EXITING:
-			self.queue_free()
-
-		if state == State.ENTERING:
-			state = State.ORDERING
-
-		return
-
-	velocity = global_position.direction_to(next_pos) * move_speed
-
-
-func _set_target_position(target: Vector2) -> void:
-	if not nav_agent.target_position.is_equal_approx(target):
-		nav_agent.target_position = target
-
-
-func _create_sprite_frames(sprite_sheet: Texture2D) -> SpriteFrames:
+func _create_sprites(sprite_sheet: Texture2D) -> SpriteFrames:
 
 	var sprite_frames := SpriteFrames.new()
 

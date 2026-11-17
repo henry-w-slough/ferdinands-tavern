@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://g2josgwv0ihy"
-path="res://.godot/imported/ui_order_background.png-8b0da0aad312f574bded051f50a0cac9.ctex"
+uid="uid://clxltnvcnvavy"
+path="res://.godot/imported/Furniture.png-57d791b9b615f4505871d99f82aee4c6.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Assets/ui_order_background.png"
-dest_files=["res://.godot/imported/ui_order_background.png-8b0da0aad312f574bded051f50a0cac9.ctex"]
+source_file="res://Assets/Tilemaps/Furniture.png"
+dest_files=["res://.godot/imported/Furniture.png-57d791b9b615f4505871d99f82aee4c6.ctex"]
 
 [params]
 

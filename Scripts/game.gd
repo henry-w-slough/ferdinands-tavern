@@ -1,20 +1,24 @@
 extends Node
 
-
-var should_spawn_customer: bool = false
-var customer_spawn_chance: int = 2
-
-var current_orders: Array[Order] = []
-
-var total_customers: int = 0
+#game handles the game loop along with holding variables
+#that can be injected from other top level nodes.
 
 
-func _process(_delta: float) -> void:
+@export var customer_handler: Node = null
 
-	should_spawn_customer = false	
 
-	#checking orders to max_customers to max out the customers that will 
-	#at any time enter an order
-	if Engine.get_physics_frames() % 60 == 0:
-		if randi_range(0, customer_spawn_chance) == 0:
-			should_spawn_customer = true
+@export var DAY_LENGTH = 3600
+var day_running = true
+
+
+func _physics_process(_delta: float) -> void:
+
+	if not day_running:
+		return
+	
+	#handler updates should be called here
+	customer_handler.update()
+	
+	if Engine.get_physics_frames() % DAY_LENGTH == 0:
+		day_running = false
+	
