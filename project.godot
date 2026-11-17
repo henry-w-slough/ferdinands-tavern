@@ -27,6 +27,10 @@ window/stretch/aspect="expand"
 
 project/assembly_name="ferdinands-tavern"
 
+[gui]
+
+fonts/dynamic_fonts/use_oversampling=false
+
 [input]
 
 change_camera_left={

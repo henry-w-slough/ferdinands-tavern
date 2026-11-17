@@ -58,6 +58,9 @@ func _ready() -> void:
 	_navigation_ready = true
 	_set_target_position(order_point.global_position)
 
+	mouse_entered.connect(_on_mouse_entered)
+	mouse_exited.connect(_on_mouse_exited)
+
 
 func _physics_process(_delta: float) -> void:
 
@@ -74,6 +77,18 @@ func _physics_process(_delta: float) -> void:
 
 func _process(_delta: float) -> void:
 	_animate()
+
+
+func _on_mouse_entered() -> void:
+	if sprite.material:
+		# Set outline thickness to 1 pixel (or 2.0 for a thicker pixel border)
+		sprite.material.set_shader_parameter("outline_width", 1.0)
+
+
+func _on_mouse_exited() -> void:
+	if sprite.material:
+		# Hide the outline completely
+		sprite.material.set_shader_parameter("outline_width", 0.0)
 
 
 func _add_order() -> void:

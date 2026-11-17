@@ -6,7 +6,6 @@
 [ext_resource type="Texture2D" uid="uid://clxltnvcnvavy" path="res://Assets/furniture_tileset.png" id="2_go701"]
 [ext_resource type="PackedScene" uid="uid://bij4ilt3tkapm" path="res://Scenes/Customer.tscn" id="3_customer"]
 [ext_resource type="Script" uid="uid://c3411rnpepkks" path="res://Scripts/camera_handler.gd" id="4_5ukr8"]
-[ext_resource type="PackedScene" uid="uid://q5153ntqjw5a" path="res://Scenes/gui.tscn" id="7_o06y3"]
 
 [sub_resource type="NavigationPolygon" id="NavigationPolygon_in6rm"]
 vertices = PackedVector2Array(312.04688, 85.97656, 312.9375, 149.00781, 53, 149.97656, 53, 85.00781)
@@ -481,5 +480,3 @@ zoom = Vector2(6, 6)
 [node name="KitchenCamera" type="Camera2D" parent="." unique_id=312231135]
 position = Vector2(626, 81)
 zoom = Vector2(6, 6)
-
-[node name="Gui" parent="." unique_id=1899261325 instance=ExtResource("7_o06y3")]

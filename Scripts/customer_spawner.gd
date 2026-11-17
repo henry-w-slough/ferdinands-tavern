@@ -14,13 +14,9 @@ const SPAWN_CLEARANCE_SQUARED = 64.0
 
 
 func _process(_delta: float) -> void:
-
+	
 	if game.should_spawn_customer:
 		_spawn_customer()
-
-	#setting the total customers to the
-	#child-ed Customer types
-	game.total_customers = len(get_children())
 
 
 

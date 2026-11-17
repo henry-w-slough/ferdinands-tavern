@@ -1,14 +1,28 @@
 [gd_scene format=3 uid="uid://bij4ilt3tkapm"]
 
 [ext_resource type="Script" uid="uid://6smt3mouhnwi" path="res://Scripts/customer.gd" id="1_customer"]
+[ext_resource type="Shader" uid="uid://cnyucu6hw8tf6" path="res://Scenes/Customer.gdshader" id="2_r206j"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_kkvav"]
+shader = ExtResource("2_r206j")
+shader_parameter/outline_color = Color(1, 1, 1, 1)
+shader_parameter/width = 3.7730001792175
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_o7g7w"]
+shader = ExtResource("2_r206j")
+shader_parameter/outline_color = Color(1, 1, 1, 1)
+shader_parameter/width = 0.0
 
 [node name="Customer" type="CharacterBody2D" unique_id=884264352]
-collision_layer = 2
-collision_mask = 3
+material = SubResource("ShaderMaterial_kkvav")
+input_pickable = true
 script = ExtResource("1_customer")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=576402883]
 y_sort_enabled = true
+material = SubResource("ShaderMaterial_o7g7w")
 
 [node name="NavigationAgent2D" type="NavigationAgent2D" parent="." unique_id=1311351829]
 radius = 4.0
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=992244771]
