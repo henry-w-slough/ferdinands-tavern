@@ -175,7 +175,7 @@ tile_set = SubResource("TileSet_7ebyc")
 
 [node name="Camera2D" type="Camera2D" parent="Tilemaps/Background" unique_id=990367578]
 position = Vector2(231, 91)
-zoom = Vector2(5, 5)
+zoom = Vector2(4.5, 4.5)
 editor_draw_limits = true
 editor_draw_drag_margin = true
 

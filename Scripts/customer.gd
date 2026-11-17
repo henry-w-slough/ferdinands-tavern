@@ -26,12 +26,29 @@ const SPRITESHEETS = [
 ]
 
 
+enum State {
+	ENTERING,
+	ORDERING,
+	EXITING
+}
+
+
 const FRAME_SIZE = Vector2(16, 20)
+
+@export var order_position: Vector2
+@export var movement_speed: float = 50.0
 
 @onready var sprite: AnimatedSprite2D = $AnimatedSprite2D
 
+var state: State = State.ENTERING
+var exit_position: Vector2
+var nav_agent: NavigationAgent2D
+
 
 func _ready() -> void:
+	exit_position = global_position
+	nav_agent = get_node("NavigationAgent2D")
+	nav_agent.target_position = order_position
 
     #making spritesheet based on random int
 	var sprite_sheet: Texture2D = SPRITESHEETS.pick_random()
@@ -40,8 +57,37 @@ func _ready() -> void:
 	sprite.play(WALK_ANIMATIONS[WalkAnimation.LEFT])
 
 
+func _physics_process(_delta: float) -> void:
+	_navigation()
+	move_and_slide()
+
+
 func _process(_delta: float) -> void:
 	_animate()
+
+
+func _navigation() -> void:
+	
+	if nav_agent.is_navigation_finished():
+
+		velocity = Vector2.ZERO
+
+		if state == State.ENTERING:
+			state = State.ORDERING
+			return
+			
+		if state == State.ORDERING:
+			state = State.EXITING
+			nav_agent.target_position = exit_position
+			return
+
+		if state == State.EXITING:
+			queue_free()
+			return
+
+
+	var next_path_position: Vector2 = nav_agent.get_next_path_position()
+	velocity = global_position.direction_to(next_path_position) * movement_speed
 
 
 func _animate() -> void:
