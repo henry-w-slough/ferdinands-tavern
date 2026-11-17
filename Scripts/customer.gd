@@ -35,63 +35,75 @@ enum State {
 
 const FRAME_SIZE = Vector2(16, 20)
 
-@export var order_position: Vector2
-@export var movement_speed: float = 50.0
+var order_position: Node2D = null
+var exit_position: Node2D = null
 
-@onready var sprite: AnimatedSprite2D = $AnimatedSprite2D
+@export var movement_speed: float = 100.0
+
+var sprite: AnimatedSprite2D = null
+var nav_agent: NavigationAgent2D = null
 
 var state: State = State.ENTERING
-var exit_position: Vector2
-var nav_agent: NavigationAgent2D
 
 
 func _ready() -> void:
-	exit_position = global_position
-	nav_agent = get_node("NavigationAgent2D")
-	nav_agent.target_position = order_position
 
-    #making spritesheet based on random int
+	#setting up nav agent for first target
+	nav_agent = get_node("NavigationAgent2D")
+	nav_agent.target_position = order_position.global_position
+
+	#animated sprite setup
+	sprite = get_node("AnimatedSprite2D")
+
+	#making spritesheet based on random int
 	var sprite_sheet: Texture2D = SPRITESHEETS.pick_random()
 	sprite.sprite_frames = _create_sprites(sprite_sheet)
 
 	sprite.play(WALK_ANIMATIONS[WalkAnimation.LEFT])
 
 
-func _physics_process(_delta: float) -> void:
-	_navigation()
-	move_and_slide()
+func _physics_process(delta: float) -> void:
+	_navigation(delta)
 
 
 func _process(_delta: float) -> void:
 	_animate()
 
 
-func _navigation() -> void:
-	
-	if nav_agent.is_navigation_finished():
+func _navigation(delta: float) -> void:
 
+	if nav_agent.is_navigation_finished():
 		velocity = Vector2.ZERO
 
-		if state == State.ENTERING:
-			state = State.ORDERING
-			return
-			
-		if state == State.ORDERING:
-			state = State.EXITING
-			nav_agent.target_position = exit_position
-			return
+		match state:
+			State.ENTERING:
+				state = State.ORDERING
+				return
+			State.ORDERING:
+				state = State.EXITING
+				nav_agent.target_position = exit_position.global_position
+				nav_agent.get_next_path_position()
+				return
+			State.EXITING:
+				if global_position.distance_to(exit_position.global_position) <= nav_agent.target_desired_distance:
+					queue_free()
+					return
 
-		if state == State.EXITING:
-			queue_free()
-			return
-
-
+	#getting velocity based on nav path
 	var next_path_position: Vector2 = nav_agent.get_next_path_position()
-	velocity = global_position.direction_to(next_path_position) * movement_speed
+	var desired_velocity := global_position.direction_to(next_path_position) * movement_speed
+
+	#checking for early collisions to prevent jitter
+	if test_move(global_transform, desired_velocity * delta):
+		velocity = Vector2.ZERO
+		return
+
+	velocity = desired_velocity
+	move_and_slide()
 
 
 func _animate() -> void:
-    
+	
 	var real_velocity := get_real_velocity()
 
 	if real_velocity.is_zero_approx():

@@ -6,7 +6,7 @@ extends Node
 var spawner: Node = null
 
 
-@export var CUSTOMER_SPAWN_RATE = 120
+@export var CUSTOMER_SPAWN_RATE = 60
 var should_spawn_customer: bool = false
 
 

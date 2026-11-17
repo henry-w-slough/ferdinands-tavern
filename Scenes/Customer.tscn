@@ -4,6 +4,8 @@
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_o7g7w"]
 
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_5ukr8"]
+
 [node name="Customer" type="CharacterBody2D" unique_id=884264352]
 script = ExtResource("1_customer")
 
@@ -15,3 +17,4 @@ material = SubResource("ShaderMaterial_o7g7w")
 radius = 4.0
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=992244771]
+shape = SubResource("RectangleShape2D_5ukr8")

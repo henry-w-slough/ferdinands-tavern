@@ -5,12 +5,12 @@
 [ext_resource type="Script" uid="uid://cuxcdb1or1hkr" path="res://Scripts/customer_handler.gd" id="2_fo5ed"]
 [ext_resource type="Texture2D" uid="uid://clxltnvcnvavy" path="res://Assets/Tilemaps/Furniture.png" id="2_go701"]
 [ext_resource type="Script" uid="uid://cprv58u1vus5u" path="res://Scripts/customer_spawner.gd" id="3_5ukr8"]
-[ext_resource type="PackedScene" uid="uid://bij4ilt3tkapm" path="res://Scenes/Customer.tscn" id="3_customer"]
+[ext_resource type="PackedScene" uid="uid://bij4ilt3tkapm" path="res://Scenes/customer.tscn" id="3_customer"]
 
 [sub_resource type="NavigationPolygon" id="NavigationPolygon_bctok"]
-vertices = PackedVector2Array(474, 165.90625, 143, 163.07813, 143, 149.96875, 474, 149.02344)
-polygons = Array[PackedInt32Array]([PackedInt32Array(0, 1, 2, 3)])
-outlines = Array[PackedVector2Array]([PackedVector2Array(133, 173, 133, 140, 484, 139, 484, 176)])
+vertices = PackedVector2Array(518.21875, 139.09375, 520.77344, 252.95313, 95.22656, 251.03906, 423.03125, 140, 97.77344, 139.02344)
+polygons = Array[PackedInt32Array]([PackedInt32Array(0, 1, 2, 3), PackedInt32Array(4, 3, 2)])
+outlines = Array[PackedVector2Array]([PackedVector2Array(88, 129, 423, 130, 528, 129, 531, 263, 85, 261)])
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_go701"]
 texture = ExtResource("1_a02cp")
@@ -187,10 +187,18 @@ customer_handler = NodePath("../CustomerHandler")
 script = ExtResource("2_fo5ed")
 game = NodePath("../Game")
 
-[node name="Spawner" type="Node" parent="CustomerHandler" unique_id=1048350183 node_paths=PackedStringArray("customer_spawn")]
+[node name="Spawner" type="Node" parent="CustomerHandler" unique_id=1048350183 node_paths=PackedStringArray("customer_spawn", "customer_order", "customer_exit")]
 script = ExtResource("3_5ukr8")
 customer_scene = ExtResource("3_customer")
 customer_spawn = NodePath("../../CustomerSpawn")
+customer_order = NodePath("../../CustomerOrder")
+customer_exit = NodePath("../../CustomerExit")
 
 [node name="CustomerSpawn" type="Node2D" parent="." unique_id=1246326941]
 position = Vector2(462, 156)
+
+[node name="CustomerOrder" type="Node2D" parent="." unique_id=991045701]
+position = Vector2(148, 156)
+
+[node name="CustomerExit" type="Node2D" parent="." unique_id=1814861204]
+position = Vector2(387, 178)
