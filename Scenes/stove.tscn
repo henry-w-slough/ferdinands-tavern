@@ -1,0 +1,19 @@
+[gd_scene format=3 uid="uid://bvc85kx2bakky"]
+
+[ext_resource type="Texture2D" uid="uid://c1fjs5elkd700" path="res://Assets/stove.png" id="1_i7l3s"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_gblqm"]
+radius = 29.068884
+
+[node name="Stove" type="CharacterBody2D" unique_id=1524570362]
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=838705459]
+texture = ExtResource("1_i7l3s")
+
+[node name="Shape1" type="CollisionShape2D" parent="." unique_id=1774082231]
+position = Vector2(0, -33)
+shape = SubResource("CircleShape2D_gblqm")
+
+[node name="Shape2" type="CollisionShape2D" parent="." unique_id=1589289963]
+position = Vector2(0, 31)
+shape = SubResource("CircleShape2D_gblqm")

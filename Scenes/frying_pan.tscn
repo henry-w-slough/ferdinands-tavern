@@ -1,0 +1,64 @@
+[gd_scene format=3 uid="uid://bpqwh3hjpsr0n"]
+
+[ext_resource type="Texture2D" uid="uid://db0oa5pnga16g" path="res://Assets/frying_pan.png" id="1_8pr5m"]
+[ext_resource type="Script" uid="uid://bhvqsw8oncxql" path="res://Scripts/pan.gd" id="1_rj1pm"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_rj1pm"]
+atlas = ExtResource("1_8pr5m")
+region = Rect2(0, 0, 66, 100)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_bkx5t"]
+atlas = ExtResource("1_8pr5m")
+region = Rect2(132, 0, 66, 100)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_noh1f"]
+atlas = ExtResource("1_8pr5m")
+region = Rect2(66, 0, 66, 100)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_gblqm"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_rj1pm")
+}],
+"loop": 1,
+"name": &"default",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_bkx5t")
+}],
+"loop": 1,
+"name": &"done",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_noh1f")
+}],
+"loop": 1,
+"name": &"frying",
+"speed": 5.0
+}]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_gblqm"]
+radius = 36.05551
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_rj1pm"]
+size = Vector2(20, 32)
+
+[node name="frying_pan" type="CharacterBody2D" unique_id=860110014]
+script = ExtResource("1_rj1pm")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=508954194]
+sprite_frames = SubResource("SpriteFrames_gblqm")
+animation = &"done"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=907545430]
+position = Vector2(0, -17)
+shape = SubResource("CircleShape2D_gblqm")
+
+[node name="CollisionShape2D2" type="CollisionShape2D" parent="." unique_id=268181083]
+position = Vector2(0, 34)
+shape = SubResource("RectangleShape2D_rj1pm")

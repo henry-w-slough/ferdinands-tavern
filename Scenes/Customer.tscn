@@ -2,19 +2,17 @@
 
 [ext_resource type="Script" uid="uid://dlib6qcoiix5r" path="res://Scripts/customer.gd" id="1_customer"]
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_o7g7w"]
-
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_5ukr8"]
+size = Vector2(15, 16)
 
 [node name="Customer" type="CharacterBody2D" unique_id=884264352]
 script = ExtResource("1_customer")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=576402883]
 y_sort_enabled = true
-material = SubResource("ShaderMaterial_o7g7w")
 
 [node name="NavigationAgent2D" type="NavigationAgent2D" parent="." unique_id=1311351829]
-radius = 4.0
+radius = 160.62
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=992244771]
 shape = SubResource("RectangleShape2D_5ukr8")

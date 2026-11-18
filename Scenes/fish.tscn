@@ -1,0 +1,31 @@
+[gd_scene format=3 uid="uid://d2y226a2hdopp"]
+
+[ext_resource type="Texture2D" uid="uid://dgt3ule1k0gdr" path="res://Assets/ingredients.png" id="1_twvwo"]
+[ext_resource type="Script" uid="uid://cisq0crn8lyjy" path="res://Scripts/ingredient.gd" id="2_c4ibo"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_c4ibo"]
+atlas = ExtResource("1_twvwo")
+region = Rect2(0, 32, 32, 32)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_gblqm"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_c4ibo")
+}],
+"loop": 1,
+"name": &"default",
+"speed": 5.0
+}]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_gblqm"]
+radius = 12.0415945
+
+[node name="Fish" type="CharacterBody2D" unique_id=594675658]
+script = ExtResource("2_c4ibo")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=1474059384]
+sprite_frames = SubResource("SpriteFrames_gblqm")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1507629563]
+shape = SubResource("CircleShape2D_gblqm")

@@ -1,0 +1,31 @@
+[gd_scene format=3 uid="uid://c3phhrh5glr0l"]
+
+[ext_resource type="Texture2D" uid="uid://dgt3ule1k0gdr" path="res://Assets/ingredients.png" id="1_y1140"]
+[ext_resource type="Script" uid="uid://cisq0crn8lyjy" path="res://Scripts/ingredient.gd" id="2_frqxw"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_frqxw"]
+atlas = ExtResource("1_y1140")
+region = Rect2(96, 0, 32, 32)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_gblqm"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_frqxw")
+}],
+"loop": 1,
+"name": &"default",
+"speed": 5.0
+}]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_gblqm"]
+radius = 12.0415945
+
+[node name="Pork" type="CharacterBody2D" unique_id=1698954300]
+script = ExtResource("2_frqxw")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=1875494583]
+sprite_frames = SubResource("SpriteFrames_gblqm")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1333038320]
+shape = SubResource("CircleShape2D_gblqm")
